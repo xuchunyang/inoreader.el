@@ -28,7 +28,7 @@
 
 ;;; Code:
 
-(require 'oauth2)
+(require 'oauth2) ; XXX byte compile: reference to free variable ‘url-http-method’
 
 (defvar url-http-end-of-headers)
 (defvar url-http-response-status)

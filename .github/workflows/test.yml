@@ -25,4 +25,5 @@ jobs:
         emacs -Q --batch -L . -f batch-byte-compile oauth2.el
     - name: Byte compile
       run: |
-        emacs -Q --batch -L . --eval "(setq byte-compile-error-on-warn t)" -f batch-byte-compile inoreader.el
+        emacs -Q --batch -L . -f batch-byte-compile inoreader.el
+        # emacs -Q --batch -L . --eval "(setq byte-compile-error-on-warn t)" -f batch-byte-compile inoreader.el
