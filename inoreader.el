@@ -114,7 +114,7 @@ write permission to mark a item read.")
            inoreader-app-secret
            inoreader-redirect-uri
            inoreader--state)))
-  inoreader-token)
+  inoreader--token)
 
 (defconst inoreader--api-base-url "https://www.inoreader.com/reader/api/0"
   "The API base URL.")
@@ -141,7 +141,7 @@ write permission to mark a item read.")
   (unless (string-prefix-p "/" resource)
     (setq resource (concat "/" resource)))
   (with-current-buffer (oauth2-url-retrieve-synchronously
-                        (inoreader-token)
+                        (inoreader--token)
                         (concat inoreader--api-base-url
                                 resource
                                 (and query
