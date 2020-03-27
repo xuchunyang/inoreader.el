@@ -4,7 +4,7 @@
 
 ;; Author: Xu Chunyang
 ;; Homepage: https://github.com/xuchunyang/inoreader.el
-;; Package-Requires: ((emacs "25.1") (oauth2 "0.11"))
+;; Package-Requires: ((emacs "25.1") (oauth2 "0.12"))
 ;; Version: 0
 ;; Keywords: news
 
@@ -69,44 +69,11 @@ write permission to mark a item read.")
 (defvar inoreader--token nil
   "Nil or an object of `oauth2-token'.")
 
-;; XXX `oauth2-auth-and-store' doesn't support state, I've reported it to
-;; upstream, but I don't know if/when upstream can resolve the issue
-(defun inoreader--oauth2-auth-and-store (auth-url token-url scope client-id client-secret &optional redirect-uri state)
-  "Request access to a resource and store it using `plstore'."
-  ;; We store a MD5 sum of all URL
-  (let* ((plstore (plstore-open oauth2-token-file))
-         (id (oauth2-compute-id auth-url token-url scope))
-         (plist (cdr (plstore-get plstore id))))
-    ;; Check if we found something matching this access
-    (if plist
-        ;; We did, return the token object
-        (make-oauth2-token :plstore plstore
-                           :plstore-id id
-                           :client-id client-id
-                           :client-secret client-secret
-                           :access-token (plist-get plist :access-token)
-                           :refresh-token (plist-get plist :refresh-token)
-                           :token-url token-url
-                           :access-response (plist-get plist :access-response))
-      (let ((token (oauth2-auth auth-url token-url
-                                client-id client-secret scope state redirect-uri)))
-        ;; Set the plstore
-        (setf (oauth2-token-plstore token) plstore)
-        (setf (oauth2-token-plstore-id token) id)
-        (plstore-put plstore id nil `(:access-token
-                                      ,(oauth2-token-access-token token)
-                                      :refresh-token
-                                      ,(oauth2-token-refresh-token token)
-                                      :access-response
-                                      ,(oauth2-token-access-response token)))
-        (plstore-save plstore)
-        token))))
-
 (defun inoreader--token ()
   "Return the token."
   (unless inoreader--token
     (setq inoreader--token
-          (inoreader--oauth2-auth-and-store
+          (oauth2-auth-and-store
            inoreader--auth-url
            inoreader--token-url
            inoreader--app-scope

@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install deps
       run: |
-        curl -s -o oauth2.el https://elpa.gnu.org/packages/oauth2-0.11.el
+        curl -s -o oauth2.el https://elpa.gnu.org/packages/oauth2-0.12.el
         emacs -Q --batch -L . -f batch-byte-compile oauth2.el
     - name: Byte compile
       run: |
